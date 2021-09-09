@@ -1,0 +1,59 @@
+﻿@model AmikojApi.Models.CourseModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MyLang" class="control-label"></label>
+                <input asp-for="MyLang" class="form-control" />
+                <span asp-validation-for="MyLang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LearnLang" class="control-label"></label>
+                <input asp-for="LearnLang" class="form-control" />
+                <span asp-validation-for="LearnLang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastChapter" class="control-label"></label>
+                <input asp-for="LastChapter" class="form-control" />
+                <span asp-validation-for="LastChapter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastClass" class="control-label"></label>
+                <input asp-for="LastClass" class="form-control" />
+                <span asp-validation-for="LastClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Progress" class="control-label"></label>
+                <input asp-for="Progress" class="form-control" />
+                <span asp-validation-for="Progress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
