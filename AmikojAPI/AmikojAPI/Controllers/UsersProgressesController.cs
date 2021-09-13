@@ -88,17 +88,17 @@ namespace AmikojApi.Controllers
         {
             try
             {
-                var word = await _context.UsersProgresses.Where(c =>  c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode)).FirstOrDefaultAsync();
-                if (word != null)
+                var progress = await _context.UsersProgresses.Where(c =>  c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode)).FirstOrDefaultAsync();
+                if (progress != null)
                 {
-                    return Conflict(word);
+                    return Conflict(progress);
                 }
-                _context.UsersProgresses.Add(word);
+                _context.UsersProgresses.Add(usersProgress);
                 await _context.SaveChangesAsync();
-                word = await _context.UsersProgresses.Where(c => c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode)).FirstOrDefaultAsync();
-                if (word != null)
+                progress = await _context.UsersProgresses.Where(c => c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode)).FirstOrDefaultAsync();
+                if (progress != null)
                 {
-                    return Ok(word);
+                    return Ok(progress);
                 }
                 else
                 {
