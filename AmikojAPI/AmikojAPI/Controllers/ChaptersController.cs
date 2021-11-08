@@ -35,7 +35,7 @@ namespace AmikojApi.Controllers
 
             if (chapterModel == null || chapterModel.Count == 0)
             {
-                return NotFound();
+                return Accepted();
             }
 
             return Ok(chapterModel);
@@ -49,7 +49,7 @@ namespace AmikojApi.Controllers
 
             if (chapterModel == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
             return Ok(chapterModel);
@@ -63,7 +63,7 @@ namespace AmikojApi.Controllers
 
             if (chapterModel == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
             return Ok(chapterModel);
@@ -91,7 +91,7 @@ namespace AmikojApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return Accepted();
                 }
 
             }

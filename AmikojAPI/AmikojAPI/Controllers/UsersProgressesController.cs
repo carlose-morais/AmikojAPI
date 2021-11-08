@@ -22,29 +22,29 @@ namespace AmikojApi.Controllers
 
         // GET: api/UsersProgresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsersProgress>>> GetUsersProgresses()
+        public async Task<Object> GetUsersProgresses()
         {
-            return await _context.UsersProgresses.ToListAsync();
+            return Ok(await _context.UsersProgresses.ToListAsync());
         }
 
         // GET: api/UsersProgresses/5
         [HttpGet("{myLangCode}/{learnLangCode}/{userId}")]
-        public async Task<ActionResult<UsersProgress>> GetUsersProgress(string userId, string learnLangCode, string myLangCode)
+        public async Task<Object> GetUsersProgress(string userId, string learnLangCode, string myLangCode)
         {
             var usersProgress = await _context.UsersProgresses.Where(u => u.UserId == userId && u.LearnLangCode == learnLangCode && u.MyLangCode == myLangCode).FirstOrDefaultAsync();
 
             if (usersProgress == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
-            return usersProgress;
+            return Ok(usersProgress);
         }
 
 
         // GET: api/UsersProgresses/5
         [HttpGet("{userId}")]
-        public async Task<ActionResult<List<UsersProgress>>> GetUsersProgressById(string userId)
+        public async Task<Object> GetUsersProgressById(string userId)
         {
             var usersProgress = await _context.UsersProgresses.Where(u => u.UserId == userId).OrderBy(x => x.ChapterNumber).ToListAsync();
 
@@ -53,13 +53,13 @@ namespace AmikojApi.Controllers
                 return NotFound();
             }
 
-            return usersProgress;
+            return Ok(usersProgress);
         }
 
         // PUT: api/UsersProgresses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public async Task<IActionResult> PutUsersProgress(UsersProgress usersProgress)
+        public async Task<Object> PutUsersProgress(UsersProgress usersProgress)
         {
             try
             {
@@ -78,24 +78,24 @@ namespace AmikojApi.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(usersProgress);
         }
 
         // POST: api/UsersProgresses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UsersProgress>> PostUsersProgress(UsersProgress usersProgress)
+        public async Task<Object> PostUsersProgress(UsersProgress usersProgress)
         {
             try
             {
-                var progress = await _context.UsersProgresses.Where(c =>  c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode)).FirstOrDefaultAsync();
+                var progress = await _context.UsersProgresses.Where(c =>  c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode) && c.UserId.Equals(usersProgress.UserId)).FirstOrDefaultAsync();
                 if (progress != null)
                 {
-                    return Conflict(progress);
+                    return Accepted(progress);
                 }
                 _context.UsersProgresses.Add(usersProgress);
                 await _context.SaveChangesAsync();
-                progress = await _context.UsersProgresses.Where(c => c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode)).FirstOrDefaultAsync();
+                progress = await _context.UsersProgresses.Where(c => c.ChapterNumber == usersProgress.ChapterNumber && c.LearnLangCode.Equals(usersProgress.LearnLangCode) && c.MyLangCode.Equals(usersProgress.MyLangCode) && c.UserId.Equals(usersProgress.UserId)).FirstOrDefaultAsync();
                 if (progress != null)
                 {
                     return Ok(progress);

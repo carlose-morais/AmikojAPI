@@ -24,7 +24,7 @@ namespace AmikojApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ClassesModel>>> GetDeClasses()
         {
-            return await _context.Classes.ToListAsync();
+            return  Ok(await _context.Classes.ToListAsync());
         }
 
         // GET: api/Classes/pt/en/1
@@ -37,7 +37,7 @@ namespace AmikojApi.Controllers
 
                 if (classModel == null)
                 {
-                    return NotFound();
+                    return Accepted();
                 }
 
                 return Ok(classModel);
@@ -58,7 +58,7 @@ namespace AmikojApi.Controllers
 
                 if (classModel == null)
                 {
-                    return NotFound();
+                    return Accepted();
                 }
 
                 return Ok(classModel);
@@ -78,10 +78,10 @@ namespace AmikojApi.Controllers
 
             if (Class == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
-            return Class;
+            return Ok(Class);
         }
 
         // GET: api/Classes/5
@@ -92,7 +92,7 @@ namespace AmikojApi.Controllers
 
             if (Class == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
             return Class;
@@ -103,22 +103,24 @@ namespace AmikojApi.Controllers
         [HttpPut]
         public async Task<IActionResult> PutClass(int id, ClassesModel Class)
         {
-            if (id != Class.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(Class).State = EntityState.Modified;
+            
 
             try
             {
+                if (id != Class.Id)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(Class).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return Accepted();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!ClassExists(id))
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
                 else
                 {
@@ -126,7 +128,6 @@ namespace AmikojApi.Controllers
                 }
             }
 
-            return NoContent();
         }
 
         // POST: api/Classes
@@ -139,7 +140,7 @@ namespace AmikojApi.Controllers
                 var _class = await _context.Classes.Where(c => c.ClassNumber == classModel.ClassNumber && c.ChapterNumber == classModel.ChapterNumber && c.LearnLangCode.Equals(classModel.LearnLangCode) && c.MyLangCode.Equals(classModel.MyLangCode)).FirstOrDefaultAsync();
                 if (_class != null)
                 {
-                    return Conflict(_class);
+                    return Accepted(_class);
                 }
                 _context.Classes.Add(classModel);
                 await _context.SaveChangesAsync();
@@ -169,7 +170,7 @@ namespace AmikojApi.Controllers
             var Class = await _context.Classes.FindAsync(id);
             if (Class == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
             _context.Classes.Remove(Class);

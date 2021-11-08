@@ -28,10 +28,10 @@ namespace AmikojApi.Controllers
         }
 
         // GET: api/Words/pt/en/1/1/1
-        [HttpGet("{myLangCode}/{learnLangCode}/{chapterId}/{classId}/{orderId}")]
-        public async Task<ActionResult<WordModel>> GetWord(int chapterId, int classId, int orderId, string learnLangCode, string myLangCode)
+        [HttpGet("{myLangCode}/{learnLangCode}/{chapterNum}/{classNum}/{orderNum}")]
+        public async Task<ActionResult<WordModel>> GetWord(int chapterNum, int classNum, int orderNum, string learnLangCode, string myLangCode)
         {
-            var wordModel = await _context.Words.FirstOrDefaultAsync(u => u.Id == chapterId && u.Id == classId && u.OrderId == orderId && u.MyLangCode == learnLangCode && u.LearnLangCode == myLangCode);
+            var wordModel = await _context.Words.FirstOrDefaultAsync(u => u.ChapterNumber == chapterNum && u.ClassNumber == classNum && u.OrderId == orderNum && u.MyLangCode == learnLangCode && u.LearnLangCode == myLangCode);
 
             if (wordModel == null)
             {
@@ -42,10 +42,10 @@ namespace AmikojApi.Controllers
         }
 
         // GET: api/Words/pt/en/1/1
-        [HttpGet("{myLangCode}/{learnLangCode}/{chapterId}/{classId}")]
-        public async Task<ActionResult<List<WordModel>>> GetWords(int chapterId, int classId, string learnLangCode, string myLangCode)
+        [HttpGet("{myLangCode}/{learnLangCode}/{chapterNum}/{classNum}")]
+        public async Task<ActionResult<List<WordModel>>> GetWords(int chapterNum, int classNum, string learnLangCode, string myLangCode)
         {
-            var wordModel = await _context.Words.Where<WordModel>(u => u.Id == chapterId && u.Id == classId && u.MyLangCode == learnLangCode && u.LearnLangCode == myLangCode).ToListAsync();
+            var wordModel = await _context.Words.Where<WordModel>(u => u.ChapterNumber == chapterNum && u.ClassNumber == classNum && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode).ToListAsync();
 
             if (wordModel == null)
             {

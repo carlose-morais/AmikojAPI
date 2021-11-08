@@ -35,24 +35,24 @@ namespace AmikojApi.Controllers
 
             if (Class == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
-            return Class;
+            return Ok(Class);
         }
 
         // GET: api/Classes/5
-        [HttpGet("{id}/{userId}")]
-        public async Task<ActionResult<List<ClassResultModel>>> GetClassResultbyChapterId(int id, string userId)
+        [HttpGet("{myLangCode}/{learnLangCode}/{chapterNumb}/{userId}")]
+        public async Task<ActionResult<List<ClassResultModel>>> GetClassResultbyChapterId(int chapterNumb, string myLangCode, string learnLangCode, string userId)
         {
-            var Class = await _context.ClassResult.Where<ClassResultModel>(u => u.Id == id && u.UserId == userId).ToListAsync();
+            var Class = await _context.ClassResult.Where<ClassResultModel>(u => u.ChapterNumber == chapterNumb && u.UserId == userId && u.MyLangCode.Equals(myLangCode) && u.LearnLangCode.Equals(learnLangCode)).ToListAsync();
 
             if (Class == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
-            return Class;
+            return Ok(Class);
         }
 
         // PUT: api/Classes/5
@@ -64,12 +64,13 @@ namespace AmikojApi.Controllers
             {
                 _context.Entry(Class).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return Ok();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!ClassExists(Class.Id))
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
                 else
                 {
@@ -77,7 +78,6 @@ namespace AmikojApi.Controllers
                 }
             }
 
-            return NoContent();
         }
 
         // POST: api/Classes
@@ -85,22 +85,29 @@ namespace AmikojApi.Controllers
         [HttpPost]
         public async Task<ActionResult<ClassResultModel>> PostClassResult(ClassResultModel classResultModel)
         {
+            try
+            {
 
-            var classResult = await _context.ClassResult.Where(c => c.ClassNumber == classResultModel.ClassNumber && c.ChapterNumber == classResultModel.ChapterNumber && c.LearnLangCode.Equals(classResultModel.LearnLangCode) && c.MyLangCode.Equals(classResultModel.MyLangCode)).FirstOrDefaultAsync();
-            if (classResult != null)
-            {
-                return Conflict();
+                var classResult = await _context.ClassResult.Where(c => c.ClassNumber == classResultModel.ClassNumber && c.ChapterNumber == classResultModel.ChapterNumber && c.LearnLangCode.Equals(classResultModel.LearnLangCode) && c.MyLangCode.Equals(classResultModel.MyLangCode)).FirstOrDefaultAsync();
+                if (classResult != null)
+                {
+                    return Accepted();
+                }
+                _context.ClassResult.Add(classResultModel);
+                await _context.SaveChangesAsync();
+                classResult = await _context.ClassResult.Where(c => c.ClassNumber == classResultModel.ClassNumber && c.ChapterNumber == classResultModel.ChapterNumber && c.LearnLangCode.Equals(classResultModel.LearnLangCode) && c.MyLangCode.Equals(classResultModel.MyLangCode)).FirstOrDefaultAsync();
+                if (classResult != null)
+                {
+                    return Ok(classResult);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
-            _context.ClassResult.Add(classResultModel);
-            await _context.SaveChangesAsync();
-            classResult = await _context.ClassResult.Where(c => c.ClassNumber == classResultModel.ClassNumber && c.ChapterNumber == classResultModel.ChapterNumber && c.LearnLangCode.Equals(classResultModel.LearnLangCode) && c.MyLangCode.Equals(classResultModel.MyLangCode)).FirstOrDefaultAsync();
-            if (classResult != null)
+            catch (DbUpdateConcurrencyException)
             {
-                return Ok(classResult);
-            }
-            else
-            {
-                return BadRequest();
+                    return BadRequest();
             }
         }
 
@@ -111,7 +118,7 @@ namespace AmikojApi.Controllers
             var Class = await _context.ClassResult.FindAsync(id);
             if (Class == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
             _context.ClassResult.Remove(Class);

@@ -28,12 +28,12 @@ namespace AmikojApi.Controllers
         }
 
         // GET: api/Sentences/pt/en/1/1/1
-        [HttpGet("{myLangCode}/{learnLangCode}/{chapterId}/{classId}/{orderId}")]
-        public async Task<ActionResult<SentenceModel>> GetSentence(int chapterId, int classId, int orderId, string myLangCode, string learnLangCode)
+        [HttpGet("{myLangCode}/{learnLangCode}/{chapterNumber}/{classNumber}/{orderId}")]
+        public async Task<ActionResult<SentenceModel>> GetSentence(int chapterNumber, int classNumber, int orderId, string myLangCode, string learnLangCode)
         {
             try
             {
-                var sentenceModel = await _context.Sentences.FirstOrDefaultAsync(u => u.Id == chapterId && u.Id == classId && u.OrderId == orderId && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode);
+                var sentenceModel = await _context.Sentences.FirstOrDefaultAsync(u => u.ChapterNumber == chapterNumber && u.ClassNumber == classNumber && u.OrderId == orderId && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode);
 
                 if (sentenceModel == null)
                 {
@@ -51,10 +51,10 @@ namespace AmikojApi.Controllers
         }
 
         // GET: api/Words/pt/en/1/1
-        [HttpGet("{myLangCode}/{learnLangCode}/{chapterId}/{classId}")]
-        public async Task<ActionResult<List<SentenceModel>>> GetSentences(int chapterId, int classId, string myLangCode, string learnLangCode)
+        [HttpGet("{myLangCode}/{learnLangCode}/{chapterNumber}/{classNumber}")]
+        public async Task<ActionResult<List<SentenceModel>>> GetSentences(int chapterNumber, int classNumber, string myLangCode, string learnLangCode)
         {
-            var sentendeModel = await _context.Sentences.Where<SentenceModel>(u => u.Id == chapterId && u.Id == classId && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode).ToListAsync();
+            var sentendeModel = await _context.Sentences.Where<SentenceModel>(u => u.ChapterNumber == chapterNumber && u.ClassNumber == classNumber && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode).ToListAsync();
 
             if (sentendeModel == null)
             {

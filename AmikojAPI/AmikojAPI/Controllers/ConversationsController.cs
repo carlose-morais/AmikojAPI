@@ -24,35 +24,35 @@ namespace AmikojApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConversationModel>>> GetDeConversations()
         {
-            return await _context.Conversations.ToListAsync();
+            return Ok(await _context.Conversations.ToListAsync());
         }
 
         // GET: api/Conversations/en/2/3/63
-        [HttpGet("{myLangCode}/{learnLangCode}/{chapterId}/{classId}/{orderId}")]
-        public async Task<ActionResult<ConversationModel>> GetConversation(int chapterId, int classId, int orderId, string myLangCode, string learnLangCode)
+        [HttpGet("{myLangCode}/{learnLangCode}/{chapterNum}/{classNum}/{orderId}")]
+        public async Task<ActionResult<ConversationModel>> GetConversation(int chapterNum, int classNum, int orderId, string myLangCode, string learnLangCode)
         {
-            var Conversation = await _context.Conversations.FirstOrDefaultAsync(u => u.Id == chapterId && u.Id == classId && u.OrderId == orderId && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode);
+            var Conversation = await _context.Conversations.FirstOrDefaultAsync(u => u.ChapterNumber == chapterNum && u.ClassNumber == classNum && u.OrderId == orderId && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode);
 
             if (Conversation == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
-            return Conversation;
+            return Ok(Conversation);
         }
 
         // GET: api/Conversations/en/2/3
-        [HttpGet("{myLangCode}/{learnLangCode}/{chapterId}/{classId}")]
-        public async Task<ActionResult<ConversationModel>> GetConversationsByClass(int chapterId, int classId, string myLangCode, string learnLangCode)
+        [HttpGet("{myLangCode}/{learnLangCode}/{chapterNum}/{classNum}")]
+        public async Task<ActionResult<List<ConversationModel>>> GetConversationsByClass(int chapterNum, int classNum, string myLangCode, string learnLangCode)
         {
-            var Conversation = await _context.Conversations.FirstOrDefaultAsync(u => u.Id == chapterId && u.Id == classId && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode);
+            var Conversations = await _context.Conversations.Where<ConversationModel>(u => u.ChapterNumber == chapterNum && u.ClassNumber == classNum && u.MyLangCode == myLangCode && u.LearnLangCode == learnLangCode).ToListAsync();
 
-            if (Conversation == null)
+            if (Conversations == null)
             {
                 return NotFound();
             }
 
-            return Conversation;
+            return Ok(Conversations);
         }
         // PUT: api/Conversations/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

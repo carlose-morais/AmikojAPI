@@ -24,7 +24,7 @@ namespace AmikojApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CourseModel>>> GetCourses()
         {
-            return await _context.Courses.ToListAsync();
+            return Ok(await _context.Courses.ToListAsync());
         }
 
         // GET: api/Courses/5
@@ -35,7 +35,7 @@ namespace AmikojApi.Controllers
 
             if (course == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
             return Ok(course);
@@ -50,7 +50,7 @@ namespace AmikojApi.Controllers
 
             if (wordModel == null)
             {
-                return NotFound();
+                return Accepted();
             }
 
             return Ok(wordModel);
@@ -61,26 +61,17 @@ namespace AmikojApi.Controllers
         [HttpPut]
         public async Task<IActionResult> PutCourse(CourseModel course)
         {
-
-
             try
             {
                 _context.Entry(course).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return Ok();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CourseExists(course.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                
+                return BadRequest();
             }
-
-            return NoContent();
         }
 
         // POST: api/Courses
@@ -93,7 +84,7 @@ namespace AmikojApi.Controllers
                 var course = await _context.Courses.Where(c => c.LearnLangCode.Equals(courseModel.LearnLangCode) && c.MyLangCode.Equals(courseModel.MyLangCode)).FirstOrDefaultAsync();
                 if (course != null)
                 {
-                    return Conflict(course);
+                    return Accepted(course);
                 }
                 _context.Courses.Add(courseModel);
                 await _context.SaveChangesAsync();
